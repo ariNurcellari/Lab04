@@ -11,6 +11,11 @@ import it.polito.tdp.lab04.model.Corso;
 import it.polito.tdp.lab04.model.Studente;
 
 public class CorsoDAO {
+	List<Corso> corsi ;
+	
+	public CorsoDAO() {
+		corsi = new LinkedList<Corso>();
+	}
 	
 	/*
 	 * Ottengo tutti i corsi salvati nel Db
@@ -18,8 +23,6 @@ public class CorsoDAO {
 	public List<Corso> getTuttiICorsi() {
 
 		final String sql = "SELECT * FROM corso";
-
-		List<Corso> corsi = new LinkedList<Corso>();
 
 		try {
 			Connection conn = ConnectDB.getConnection();
@@ -38,6 +41,9 @@ public class CorsoDAO {
 
 				// Crea un nuovo JAVA Bean Corso
 				// Aggiungi il nuovo oggetto Corso alla lista corsi
+				
+				Corso corso = new Corso(codins,numeroCrediti, nome, periodoDidattico);
+				corsi.add(corso) ;
 			}
 
 			conn.close();
@@ -55,15 +61,24 @@ public class CorsoDAO {
 	/*
 	 * Dato un codice insegnamento, ottengo il corso
 	 */
-	public void getCorso(Corso corso) {
-		// TODO
+	public Corso getCorso(Corso corso) {
+		if(corsi.contains(corso))
+			return corso ;
+		return null ;
 	}
 
 	/*
 	 * Ottengo tutti gli studenti iscritti al Corso
 	 */
-	public void getStudentiIscrittiAlCorso(Corso corso) {
-		// TODO
+	public List<Studente> getStudentiIscrittiAlCorso(Corso corso) {
+		StudenteDAO studenteDAO = new StudenteDAO() ;
+		List<Studente> sTemp = new LinkedList<Studente>() ;
+		
+		for(Studente s : studenteDAO.getTuttiIStudenti()) {
+			if( s.getCds().equals(corso.getCodins()))
+				sTemp.add(s) ;
+		}
+		return sTemp ;
 	}
 
 	/*
